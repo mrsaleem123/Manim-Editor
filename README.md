@@ -1,16 +1,16 @@
 # Manim Media Studio
 
-A Windows desktop studio for placing frame-accurate Manim animations over images and videos.
+A Windows desktop studio for running ChatGPT-generated Manim animation code with automatic asset selection.
 
 ## Features
 
-- Imports common image and video formats.
-- Reads width, height, duration, frame count, codecs, audio and exact fractional FPS with FFprobe.
-- Previews and scrubs video frame by frame.
-- Stores projects as readable JSON files.
-- Renders a transparent Manim overlay at the source resolution and frame rate.
-- Composites the overlay over the original media while preserving audio.
-- Tracks a selected rectangle with OpenCV CSRT and exports coordinates for Manim.
+- Accepts Manim code copied directly from ChatGPT.
+- Removes Markdown code fences and accidental standalone backticks before validation.
+- Detects the Scene class automatically when the field is blank.
+- Detects missing image, video, audio and data-file references and asks for each path.
+- Runs code without any file prompt when the animation has no external assets.
+- Provides exactly three primary actions: Render, Download Video and Reset.
+- Renders a high-quality MP4 and keeps it ready until the user downloads it.
 - Includes a Windows 10/11 x64 offline Setup EXE builder with download validation.
 
 ## Run from source
@@ -42,9 +42,9 @@ See [docs/BUILDING.md](docs/BUILDING.md) for details.
 
 Every push to `main` builds the installer automatically. You can also open **Actions → Build Windows Offline Installer → Run workflow**. The Windows runner installs the required build tools, bundles the application and MiKTeX packages, validates the Setup EXE, and uploads `ManimMediaStudio-Windows-Offline-Setup` as a downloadable artifact. Pushing a `v*` tag also attaches the Setup EXE to the matching GitHub Release.
 
-## Tracking data
+## ChatGPT code workflow
 
-Tracking is written as JSON with source-pixel `x`, `y`, `width`, `height`, and `center`. Use `studio_tracking.py` generated beside a project to convert those points to Manim coordinates. Tracking should be restarted after hard cuts, full occlusion, or severe motion blur.
+Ask ChatGPT for a complete Manim scene, paste the code into the editor, and click **Render**. When the code contains a reference such as `ImageMobject("earth.png")`, Manim Studio asks you to select that file and substitutes its real Windows path only in the temporary render copy. After a successful render, click **Download Video** to choose where the MP4 is saved.
 
 ## License
 
