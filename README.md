@@ -40,7 +40,7 @@ See [docs/BUILDING.md](docs/BUILDING.md) for details.
 
 ### Build through GitHub
 
-Open **Actions → Build Windows Offline Installer → Run workflow**. The Windows runner installs the required build tools, bundles the application and MiKTeX packages, validates the Setup EXE, and uploads `ManimMediaStudio-Windows-Offline-Setup` as a downloadable artifact. Pushing a `v*` tag also attaches the Setup EXE to the matching GitHub Release.
+Every push to `main` builds the installer automatically. You can also open **Actions → Build Windows Offline Installer → Run workflow**. The Windows runner installs the required build tools, bundles the application and MiKTeX packages, validates the Setup EXE, and uploads `ManimMediaStudio-Windows-Offline-Setup` as a downloadable artifact. Pushing a `v*` tag also attaches the Setup EXE to the matching GitHub Release.
 
 ## Tracking data
 
