@@ -157,10 +157,18 @@ if (-not $InstallerOnly) {
     Write-Host "[4/6] Building the desktop application" -ForegroundColor Cyan
     Remove-Item -LiteralPath $Dist -Recurse -Force -ErrorAction SilentlyContinue
     & $VenvPython -m PyInstaller --noconfirm --clean --windowed --name ManimMediaStudio `
-        --collect-all manim --collect-all cv2 --collect-all PySide6 `
+        --collect-all manim --collect-all manimpango --collect-all cv2 --collect-all PySide6 `
+        --hidden-import manimpango.utils `
         --copy-metadata manim --copy-metadata manimpango --copy-metadata mapbox-earcut `
         (Join-Path $ProjectRoot "launcher.py")
     if ($LASTEXITCODE -ne 0) { throw "PyInstaller failed." }
+
+    # Exercise the frozen executable before packaging it. This imports Manim and
+    # ManimPango, catching missing Python modules or native libraries in CI.
+    $AppExe = Join-Path $AppDist "ManimMediaStudio.exe"
+    & $AppExe --studio-manim-cli --version
+    if ($LASTEXITCODE -ne 0) { throw "Frozen application startup validation failed." }
+
     $Tools = Join-Path $AppDist "tools"
     New-Item -ItemType Directory -Force -Path (Join-Path $Tools "ffmpeg") | Out-Null
     Copy-Item (Join-Path $FfmpegBin "ffmpeg.exe"), (Join-Path $FfmpegBin "ffprobe.exe") -Destination (Join-Path $Tools "ffmpeg")
