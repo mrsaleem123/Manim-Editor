@@ -1,0 +1,11 @@
+.venv/
+build/
+dist/
+dist-installer/
+vendor/
+*.egg-info/
+__pycache__/
+.pytest_cache/
+*.mms.json
+*.mp4
+*.mov

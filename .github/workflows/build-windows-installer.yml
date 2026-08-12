@@ -1,0 +1,75 @@
+name: Build Windows Offline Installer
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: windows-installer-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-installer:
+    runs-on: windows-latest
+    timeout-minutes: 180
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11 x64
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          architecture: "x64"
+          cache: pip
+
+      - name: Install Windows build tools
+        shell: powershell
+        run: |
+          choco install innosetup miktex --yes --no-progress
+          Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
+          refreshenv
+          $iscc = Get-ChildItem -Path "${env:ProgramFiles(x86)}\Inno Setup*", "$env:ProgramFiles\Inno Setup*" -Filter ISCC.exe -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+          if (-not $iscc) { throw "Inno Setup compiler was not found." }
+          $iscc.Directory.FullName | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+      - name: Prepare offline LaTeX packages
+        shell: powershell
+        run: |
+          $mpm = Get-ChildItem -Path "$env:ProgramFiles\MiKTeX", "$env:LOCALAPPDATA\Programs\MiKTeX" -Filter mpm.exe -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+          if (-not $mpm) { throw "MiKTeX package manager was not found." }
+          $bin = $mpm.Directory.FullName
+          $bin | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          & (Join-Path $bin "initexmf.exe") --admin --set-config-value="[MPM]AutoInstall=1"
+          & $mpm.FullName --admin --update-db
+          foreach ($package in @("standalone", "preview", "dvisvgm", "xcolor", "amsmath", "amsfonts", "babel-english", "cm-super", "lm")) {
+            & $mpm.FullName --admin --install=$package
+            if ($LASTEXITCODE -ne 0) { throw "MiKTeX package installation failed: $package" }
+          }
+
+      - name: Build and validate Setup EXE
+        shell: powershell
+        run: .\scripts\build-offline-installer.ps1
+
+      - name: Upload Setup EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: ManimMediaStudio-Windows-Offline-Setup
+          path: dist-installer/ManimMediaStudio-Setup-1.0.0.exe
+          if-no-files-found: error
+          retention-days: 30
+          compression-level: 0
+
+      - name: Attach Setup EXE to tagged release
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: powershell
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$env:GITHUB_REF_NAME" "dist-installer/ManimMediaStudio-Setup-1.0.0.exe" --generate-notes --title "Manim Media Studio $env:GITHUB_REF_NAME"
