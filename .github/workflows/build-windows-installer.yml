@@ -13,7 +13,7 @@ permissions:
 
 concurrency:
   group: windows-installer-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build-installer:
@@ -63,7 +63,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ManimMediaStudio-Windows-Offline-Setup
-          path: dist-installer/ManimMediaStudio-Setup-1.0.0.exe
+          path: dist-installer/ManimStudio-Setup-1.1.0.exe
           if-no-files-found: error
           retention-days: 30
           compression-level: 0
@@ -74,4 +74,4 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "$env:GITHUB_REF_NAME" "dist-installer/ManimMediaStudio-Setup-1.0.0.exe" --generate-notes --title "Manim Media Studio $env:GITHUB_REF_NAME"
+          gh release create "$env:GITHUB_REF_NAME" "dist-installer/ManimStudio-Setup-1.1.0.exe" --generate-notes --title "Manim Studio $env:GITHUB_REF_NAME"

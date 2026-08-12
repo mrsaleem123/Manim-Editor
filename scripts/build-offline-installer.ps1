@@ -206,6 +206,6 @@ Write-Host "Using Inno Setup compiler: $Iscc" -ForegroundColor DarkGreen
 Write-Host "[6/6] Compiling offline Setup EXE" -ForegroundColor Cyan
 & $Iscc (Join-Path $ProjectRoot "installer\ManimMediaStudio.iss")
 if ($LASTEXITCODE -ne 0) { throw "Inno Setup compilation failed." }
-$Setup = Join-Path $InstallerDist "ManimMediaStudio-Setup-1.0.0.exe"
+$Setup = Join-Path $InstallerDist "ManimStudio-Setup-1.1.0.exe"
 if (-not (Test-PeFile $Setup 10000000)) { throw "Final Setup EXE failed validation." }
 Write-Host "SUCCESS: $Setup" -ForegroundColor Green

@@ -1,5 +1,5 @@
-#define MyAppName "Manim Media Studio"
-#define MyAppVersion "1.0.0"
+#define MyAppName "Manim Studio"
+#define MyAppVersion "1.1.0"
 #define MyAppPublisher "Manim Media Studio contributors"
 #define MyAppExeName "ManimMediaStudio.exe"
 
@@ -18,7 +18,7 @@ SolidCompression=yes
 WizardStyle=modern
 PrivilegesRequired=lowest
 OutputDir=..\dist-installer
-OutputBaseFilename=ManimMediaStudio-Setup-1.0.0
+OutputBaseFilename=ManimStudio-Setup-1.1.0
 UninstallDisplayIcon={app}\{#MyAppExeName}
 
 [Languages]

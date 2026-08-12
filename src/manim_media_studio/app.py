@@ -50,7 +50,7 @@ class MainWindow(QMainWindow):
         self.pool = QThreadPool.globalInstance()
         self.latest_output: Path | None = None
         self.render_worker: Worker | None = None
-        self.setWindowTitle("Manim Studio 1.1")
+        self.setWindowTitle("Manim Studio 1.1.0")
         self.resize(1120, 760)
 
         root = QWidget()

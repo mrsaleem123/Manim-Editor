@@ -32,7 +32,7 @@ On a connected Windows 10/11 x64 build machine, install MiKTeX with the packages
 BUILD-OFFLINE-INSTALLER.bat
 ```
 
-The script creates `dist-installer\ManimMediaStudio-Setup-1.0.0.exe`. That Setup EXE installs without internet access. The build script refuses corrupt or HTML downloads, retries alternate sources, verifies PE headers, and supports `ISCC.exe` already installed on the build machine.
+The script creates `dist-installer\ManimStudio-Setup-1.1.0.exe`. That Setup EXE installs without internet access. The build script refuses corrupt or HTML downloads, retries alternate sources, verifies PE headers, and supports `ISCC.exe` already installed on the build machine.
 
 If a build reached step 5 or 6 and stopped, extract the latest source package over a fresh folder and copy your existing `dist` folder into it. Run `RETRY-INSTALLER-ONLY.bat` to reuse the already-built application and finish only the installer stage.
 
