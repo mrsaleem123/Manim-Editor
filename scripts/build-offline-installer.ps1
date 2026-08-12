@@ -122,6 +122,8 @@ if (-not $InstallerOnly) {
     Write-Host "[2/6] Fetching and validating FFmpeg" -ForegroundColor Cyan
     $FfmpegZip = Join-Path $Cache "ffmpeg-release-essentials.zip"
     Get-ValidatedDownload -Urls @(
+        # GitHub Releases is the primary source because gyan.dev can intermittently return HTTP 503.
+        "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip",
         "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip",
         "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-full.zip"
     ) -Destination $FfmpegZip -Kind ZIP -MinimumBytes 20000000
